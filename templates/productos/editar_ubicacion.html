@@ -1,0 +1,15 @@
+{% extends "productos/base.html" %}
+
+{% block title %}Editar Ubicación{% endblock %}
+
+{% block content %}
+    <h1>✏️ Editar Ubicación</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Actualizar</button>
+    </form>
+
+    <a href="{% url 'lista_ubicaciones' %}">⬅️ Volver</a>
+{% endblock %}

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Inventario{% endblock %}</title>
+</head>
+<body>
+    <nav>
+        <ul>
+            {% if request.user.is_authenticated %}
+                <li><a href="{% url 'lista_productos' %}">🏠 Productos</a></li>
+                {% if request.user.groups.all.0.name == "Administrador" %}
+                <li><a href="{% url 'admin:index' %}">🛠️  Admin</a></li>
+                {% endif %}
+                {% if request.user.groups.all.0.name in "Administrador,Supervisor" %}
+                <li><a href="{% url 'agregar_producto' %}">➕ Agregar Producto</a></li>
+                <li><a href="{% url 'lista_ubicaciones' %}">📦 Ubicaciones</a></li>
+                {% endif %}
+                <li><a href="{% url 'historial_movimientos' %}">📜 Historial</a></li>
+                <li>
+                    <a href="#" onclick="document.getElementById('logout-form').submit();">🚪 Cerrar sesión</a>
+                    <form id="logout-form" action="{% url 'logout' %}" method="post" style="display: none;">
+                        {% csrf_token %}
+                    </form>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    <div>
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

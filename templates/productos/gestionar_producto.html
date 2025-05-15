@@ -1,0 +1,57 @@
+{% extends "productos/base.html" %}
+
+{% block title %}Gestionar {{ producto.nombre }}{% endblock %}
+
+{% block content %}
+    <h1>📦 Gestionar {{ producto.codigo }} - {{ producto.nombre }} - Stock: {{ producto.cantidad }} - Ubicación: {{ producto.ubicacion }} - Alerta: {% if producto.alerta_activa %}
+                ✔️ (Mínimo: {{ producto.alerta_stock }})
+            {% else %}
+                ❌
+            {% endif %} - Estado: {% if producto.activo %}
+                ✅ Activo
+            {% else %}
+                🚫 Desactivado
+            {% endif %}</h1>
+
+    {% if request.user.groups.all.0.name in "Administrador,Supervisor" %}
+        <!-- Formulario de Edición de Producto -->
+        <h2>✏️ Editar Producto</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ producto_form.as_p }}
+            <button type="submit" name="editar">Guardar cambios</button>
+        </form>
+        <hr>
+    {% endif %}
+
+    {% if request.user.groups.all.0.name in "Administrador,Supervisor,Almacen" %}
+        {% if producto.activo %}
+            <!-- Formulario para Gestión de Inventario -->
+            <h2>📊 Gestión de Inventario</h2>
+            <form method="post">
+                {% csrf_token %}
+                {{ movimiento_form.as_p }}
+                <button type="submit" name="movimiento">Registrar Movimiento</button>
+            </form>
+            <hr>
+        {% else %}
+            <p style="color: red;"><strong>🚫 Este producto está deshabilitado. No se pueden registrar movimientos.</strong></p>
+            <hr>
+        {% endif %}
+    {% endif %}
+
+    <!-- Historial de Movimientos (Visible para todos) -->
+    <h2>📜 Historial</h2>
+    <ul>
+        {% for movimiento in movimientos %}
+            <li>
+                📅 {{ movimiento.fecha|date:"d/m/Y H:i" }} -
+                {{ movimiento.tipo|title }} de {{ movimiento.cantidad }} -
+                🏷️ {{ movimiento.producto.codigo }} - {{ movimiento.nombre_producto }}
+                {% if movimiento.comentario %} 📝 ({{ movimiento.comentario }}){% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+
+    <a href="{% url 'lista_productos' %}">⬅️ Volver</a>
+{% endblock %}

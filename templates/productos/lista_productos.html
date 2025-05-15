@@ -1,0 +1,106 @@
+{% extends "productos/base.html" %}
+
+{% block title %}Lista de Productos{% endblock %}
+
+{% block content %}
+    <h1>📦 Lista de Productos</h1>
+
+    <form method="GET" action="{% url 'lista_productos' %}">
+        <input type="text" name="q" placeholder="Buscar por código o nombre" value="{{ request.GET.q }}">
+    
+        <label for="ubicacion">Ubicación:</label>
+
+        <select name="ubicacion" id="ubicacion">
+            <option value="">Todas las ubicaciones</option>
+            <option value="sin_ubicacion" {% if request.GET.ubicacion == "sin_ubicacion" %}selected{% endif %}>Sin ubicación</option>
+            {% for ubicacion in ubicaciones_disponibles %}
+                <option value="{{ ubicacion.nombre }}" {% if request.GET.ubicacion == ubicacion.nombre %}selected{% endif %}>{{ ubicacion.nombre }}</option>
+            {% endfor %}
+        </select>
+    
+
+        <label for="cantidad_filtro">Cantidad:</label>
+        <input type="text" name="cantidad_filtro" placeholder="Ej: >5, <=10, 3-7, =4" value="{{ request.GET.cantidad_filtro }}">
+
+     
+        <label for="estado_activo">Estado:</label>
+        <select name="estado_activo" id="estado_activo">
+            <option value="">Todos</option>
+            <option value="activos" {% if request.GET.estado_activo == "activos" %}selected{% endif %}>Solo activos</option>
+            <option value="inactivos" {% if request.GET.estado_activo == "inactivos" %}selected{% endif %}>Solo inactivos</option>
+        </select>
+
+        <label for="alerta">Alerta:</label>
+        <select name="alerta" id="alerta">
+            <option value="">Todos</option>
+            <option value="activa" {% if request.GET.alerta == "activa" %}selected{% endif %}>Solo con alerta activa</option>
+            <option value="sin_alerta" {% if request.GET.alerta == "sin_alerta" %}selected{% endif %}>Solo sin alerta</option>
+        </select>
+
+        <button type="submit">🔍 Buscar</button>
+    </form>
+
+    <form method="get" action="{% url 'lista_productos' %}">
+        <button type="submit">🧹 Limpiar filtros</button>
+    </form>
+
+    <a href="{% url 'exportar_productos_excel' %}?{{ request.GET.urlencode }}" class="btn btn-success btn-sm">📊 Exportar Excel</a>
+    <a href="{% url 'exportar_productos_pdf' %}?{{ request.GET.urlencode }}" class="btn btn-danger btn-sm">📄 Exportar PDF</a>
+
+<ul>
+    {% if productos %}
+        {% for producto in productos %}
+            <li>
+                {{ producto.codigo }} - {{ producto.nombre }} - 
+                Stock: {{ producto.cantidad }} - 
+                Ubicación: {{ producto.ubicacion }} - 
+                Alerta: 
+                {% if producto.alerta_activa %}
+                    ✔️ (Mínimo: {{ producto.alerta_stock }})
+                {% else %}
+                    ❌
+                {% endif %}
+                - Estado: 
+                {% if producto.activo %}
+                    ✅ Activo
+                {% else %}
+                    🚫 Desactivado
+                {% endif %}
+                <a href="{% url 'gestionar_producto' producto.id %}">⚙️ Gestionar</a>
+            </li>
+        {% endfor %}
+    {% else %}
+        <p>No se encontraron productos.</p>
+    {% endif %}
+</ul>
+
+<div class="pagination">
+    <span class="step-links">
+        {% if productos.has_previous %}
+            <a href="?{% if request.GET %}{{ request.GET.urlencode|safe }}&{% endif %}page=1">⏮ Primera</a>
+            <a href="?{% if request.GET %}{{ request.GET.urlencode|safe }}&{% endif %}page={{ productos.previous_page_number }}">⬅ Anterior</a>
+        {% endif %}
+
+        <span>Página {{ productos.number }} de {{ productos.paginator.num_pages }}</span>
+
+        {% if productos.has_next %}
+            <a href="?{% if request.GET %}{{ request.GET.urlencode|safe }}&{% endif %}page={{ productos.next_page_number }}">Siguiente ➡</a>
+            <a href="?{% if request.GET %}{{ request.GET.urlencode|safe }}&{% endif %}page={{ productos.paginator.num_pages }}">Última ⏭</a>
+        {% endif %}
+    </span>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.querySelector('form[action="{% url 'lista_productos' %}"]');
+
+        form.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault(); // Evita que se abra de nuevo el select
+                form.submit(); // Envía el formulario directamente
+            }
+        });
+    });
+</script>
+
+{% endblock %}
