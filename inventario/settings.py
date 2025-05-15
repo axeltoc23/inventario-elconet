@@ -84,8 +84,8 @@ WSGI_APPLICATION = 'inventario.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'inventario_db',
-        'USER': 'inventario_user',
+        'NAME': 'db_inventario_elconet',
+        'USER': 'user_inventario_elconet',
         'PASSWORD': 'axel',
         'HOST': 'localhost',
         'PORT': '5432',
