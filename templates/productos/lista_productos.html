@@ -76,32 +76,62 @@
 </div>
 </div>
 
-<ul>
-    {% if productos %}
-        {% for producto in productos %}
-            <li>
-                {{ producto.codigo }} - {{ producto.nombre }} - 
-                Stock: {{ producto.cantidad }} - 
-                Ubicación: {{ producto.ubicacion }} - 
-                Alerta: 
-                {% if producto.alerta_activa %}
-                    ✔️ (Mínimo: {{ producto.alerta_stock }})
-                {% else %}
-                    ❌
-                {% endif %}
-                - Estado: 
-                {% if producto.activo %}
-                    ✅ Activo
-                {% else %}
-                    🚫 Desactivado
-                {% endif %}
-                <a href="{% url 'gestionar_producto' producto.id %}">⚙️ Gestionar</a>
-            </li>
-        {% endfor %}
-    {% else %}
-        <p>No se encontraron productos.</p>
-    {% endif %}
-</ul>
+<div class="card mt-4">
+  <div class="card-header">
+    <h5 class="mb-0">📦 Productos encontrados</h5>
+  </div>
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>Código</th>
+            <th>Nombre</th>
+            <th>Cantidad</th>
+            <th>Ubicación</th>
+            <th>Alerta</th>
+            <th>Estado</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for producto in productos %}
+          <tr>
+            <td>{{ producto.codigo }}</td>
+            <td>{{ producto.nombre }}</td>
+            <td>{{ producto.cantidad }}</td>
+            <td>{{ producto.ubicacion|default:"-" }}</td>
+            <td>
+              {% if producto.alerta_activa %}
+                <span class="badge bg-warning text-dark">✔️ Mín: {{ producto.alerta_stock }}</span>
+              {% else %}
+                <span class="badge bg-secondary">❌</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if producto.activo %}
+                <span class="badge bg-success">✅ Activo</span>
+              {% else %}
+                <span class="badge bg-danger">🚫 Inactivo</span>
+              {% endif %}
+            </td>
+            <td>
+              <a href="{% url 'gestionar_producto' producto.id %}" class="btn btn-sm btn-outline-primary">
+                ⚙️ Gestionar
+              </a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="7" class="text-center text-muted py-4">No se encontraron productos.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
 
 <div class="pagination">
     <span class="step-links">
