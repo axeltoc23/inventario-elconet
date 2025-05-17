@@ -5,65 +5,191 @@
 {% block content %}
     <h1>📜 Historial de Movimientos</h1>
 
-    <!-- Formulario de búsqueda -->
-<form method="GET" action="{% url 'historial_movimientos' %}">
-    <input type="text" name="q" placeholder="Buscar por código, producto o comentario" value="{{ query }}">
+<div class="card">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <h5 class="mb-0">🔎 Filtros de búsqueda</h5>
+    <div>
+      <a href="{% url 'exportar_historial_excel' %}?{{ request.GET.urlencode }}" class="btn btn-success btn-sm me-2">
+        📊 Excel
+      </a>
+      <a href="{% url 'exportar_historial_pdf' %}?{{ request.GET.urlencode }}" class="btn btn-danger btn-sm">
+        📄 PDF
+      </a>
+    </div>
+  </div>
 
-    <label for="tipo">Tipo de movimiento:</label>
-    <select name="tipo" id="tipo">
-        <option value="">Todos</option>
-        <option value="entrada" {% if request.GET.tipo == "entrada" %}selected{% endif %}>Entradas</option>
-        <option value="salida" {% if request.GET.tipo == "salida" %}selected{% endif %}>Salidas</option>
-    </select>
+  <div class="card-body">
+    <form method="GET" action="{% url 'historial_movimientos' %}" class="mb-4">
+      <div class="row g-3">
+        <div class="col-md-4">
+          <label for="q" class="form-label">Buscar por código, producto o comentario</label>
+          <input type="text" name="q" id="q" class="form-control" placeholder="Ej: producto123" value="{{ request.GET.q }}">
+        </div>
 
-    <label for="fecha_filtro">Fecha:</label>
-    <input type="text" name="fecha_filtro" placeholder="Ej: >01-04-2024 o 01-04-2024-30-04-2024" value="{{ fecha_filtro }}">
+        <div class="col-md-4">
+          <label for="tipo" class="form-label">Tipo de movimiento</label>
+          <select name="tipo" id="tipo" class="form-select">
+            <option value="">Todos</option>
+            <option value="entrada" {% if request.GET.tipo == "entrada" %}selected{% endif %}>Entradas</option>
+            <option value="salida" {% if request.GET.tipo == "salida" %}selected{% endif %}>Salidas</option>
+          </select>
+        </div>
 
-    <button type="submit">🔍 Buscar</button>
-</form>
+        <div class="col-md-4">
+          <label for="fecha_filtro" class="form-label">Fecha</label>
+          <input type="text" name="fecha_filtro" id="fecha_filtro" class="form-control" placeholder=">01-04-2024 o 01-04-2024-30-04-2024" value="{{ request.GET.fecha_filtro }}">
+        </div>
 
-<form method="get" action="{% url 'historial_movimientos' %}">
-    <button type="submit">🧹 Limpiar filtros</button>
-</form>
+        <div class="col-md-12 d-flex justify-content-end gap-2">
+          <button type="submit" class="btn btn-primary px-4">🔍 Buscar</button>
+          <a href="{% url 'historial_movimientos' %}" class="btn btn-outline-secondary px-4">🧹 Limpiar filtros</a>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
 
-<a href="{% url 'exportar_historial_excel' %}?{{ request.GET.urlencode }}" class="btn btn-success">📊 Exportar a Excel</a>
-<a href="{% url 'exportar_historial_pdf' %}?{{ request.GET.urlencode }}" class="btn btn-danger">📄 Exportar a PDF</a>
-
-    <ul>
-        {% for movimiento in movimientos %}
-            <li>
-                📅 {{ movimiento.fecha|date:"d/m/Y H:i" }} -
-                {{ movimiento.tipo|title }} de {{ movimiento.cantidad }} -
-                🏷️ {{ movimiento.producto.codigo }} - {{ movimiento.nombre_producto }}
-                {% if movimiento.comentario %} 📝 ({{ movimiento.comentario }}){% endif %}
-                {% if movimiento.usuario %}
-                    👤 por <em>{{ movimiento.usuario.get_full_name|default:movimiento.usuario.username }}</em>
-                {% else %}
-                    👤 por <em>usuario no registrado</em>
-                {% endif %}
-            </li>
-        {% empty %}
-            <li>⚠️ No se encontraron movimientos.</li>
-        {% endfor %}
-    </ul>
-
-    <a href="{% url 'lista_productos' %}">⬅️ Volver</a>
+<div class="card mt-4">
+  <div class="card-header">
+    <h5 class="mb-0">📋 Historial de movimientos</h5>
+  </div>
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>Fecha</th>
+            <th>Código</th>
+            <th>Producto</th>
+            <th>Tipo</th>
+            <th>Cantidad</th>
+            <th>Comentario</th>
+            <th>Usuario</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for movimiento in movimientos %}
+          <tr>
+            <td>📅 {{ movimiento.fecha|date:"d/m/Y H:i" }}</td>
+            <td>🏷️ {{ movimiento.producto.codigo }}</td>
+            <td>{{ movimiento.nombre_producto }}</td>
+            <td>
+              {% if movimiento.tipo == 'entrada' %}
+                <span class="badge bg-success">Entrada</span>
+              {% else %}
+                <span class="badge bg-danger">Salida</span>
+              {% endif %}
+            </td>
+            <td>{{ movimiento.cantidad }}</td>
+            <td>
+              {% if movimiento.comentario %}
+                📝 {{ movimiento.comentario }}
+              {% else %}
+                <span class="text-muted">-</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if movimiento.usuario %}
+                👤 {{ movimiento.usuario.get_full_name|default:movimiento.usuario.username }}
+              {% else %}
+                <span class="text-muted">👤 Usuario no registrado</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="7" class="text-center text-muted py-4">
+              ⚠️ No se encontraron movimientos.
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
 
 <div class="pagination">
-    <span class="step-links">
-        {% if movimientos.has_previous %}
-            <a href="?{% if request.GET %}{{ request.GET.urlencode|safe }}&{% endif %}page=1">⏮ Primera</a>
-            <a href="?{% if request.GET %}{{ request.GET.urlencode|safe }}&{% endif %}page={{ movimientos.previous_page_number }}">⬅ Anterior</a>
-        {% endif %}
+  <style>
+    .pagination.custom-white .page-link {
+      background-color: #ffffff;
+      color: #000000;
+      border: 1px solid #dee2e6;
+    }
 
-        <span>Página {{ movimientos.number }} de {{ movimientos.paginator.num_pages }}</span>
+    .pagination.custom-white .page-link:hover {
+      background-color: #f2f2f2;
+      color: #000000;
+    }
 
-        {% if movimientos.has_next %}
-            <a href="?{% if request.GET %}{{ request.GET.urlencode|safe }}&{% endif %}page={{ movimientos.next_page_number }}">Siguiente ➡</a>
-            <a href="?{% if request.GET %}{{ request.GET.urlencode|safe }}&{% endif %}page={{ movimientos.paginator.num_pages }}">Última ⏭</a>
+    .pagination.custom-white .page-item.active .page-link {
+      background-color: #000000;
+      border-color: #000000;
+      color: #ffffff;
+    }
+
+    .pagination.custom-white .page-item.disabled .page-link {
+      background-color: #ffffff;
+      color: #6c757d;
+    }
+  </style>
+
+  {% if movimientos.has_other_pages %}
+  <nav aria-label="Paginación del historial" class="mt-4">
+    <ul class="pagination custom-white justify-content-center">
+
+      {# Botón Previous #}
+      {% if movimientos.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href="?{% if request.GET %}{{ request.GET.urlencode|safe }}&{% endif %}page={{ movimientos.previous_page_number }}">Previous</a>
+        </li>
+      {% else %}
+        <li class="page-item disabled">
+          <span class="page-link">Previous</span>
+        </li>
+      {% endif %}
+
+      {# Números de página visibles (actual ±2) #}
+      {% for num in movimientos.paginator.page_range %}
+        {% if num >= movimientos.number|add:'-2' and num <= movimientos.number|add:'2' %}
+          {% if num == movimientos.number %}
+            <li class="page-item active">
+              <span class="page-link">{{ num }}</span>
+            </li>
+          {% else %}
+            <li class="page-item">
+              <a class="page-link" href="?{% if request.GET %}{{ request.GET.urlencode|safe }}&{% endif %}page={{ num }}">{{ num }}</a>
+            </li>
+          {% endif %}
         {% endif %}
-    </span>
+      {% endfor %}
+
+      {# Botón Next #}
+      {% if movimientos.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?{% if request.GET %}{{ request.GET.urlencode|safe }}&{% endif %}page={{ movimientos.next_page_number }}">Next</a>
+        </li>
+      {% else %}
+        <li class="page-item disabled">
+          <span class="page-link">Next</span>
+        </li>
+      {% endif %}
+
+    </ul>
+  </nav>
+  {% endif %}
 </div>
+
+
+
+
+
+
+
+
+
+
+
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
