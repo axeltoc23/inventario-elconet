@@ -134,9 +134,33 @@
 
 
 <div class="pagination">
+<style>
+  .pagination.custom-white .page-link {
+    background-color: #ffffff; /* Fondo blanco */
+    color: #000000;            /* Texto negro */
+    border: 1px solid #dee2e6;
+  }
+
+  .pagination.custom-white .page-link:hover {
+    background-color: #f2f2f2;
+    color: #000000;
+  }
+
+  .pagination.custom-white .page-item.active .page-link {
+    background-color: #000000; /* Fondo negro para la página activa */
+    border-color: #000000;
+    color: #ffffff;
+  }
+
+  .pagination.custom-white .page-item.disabled .page-link {
+    background-color: #ffffff;
+    color: #6c757d;
+  }
+</style>
+
 {% if productos.has_other_pages %}
   <nav aria-label="Paginación de productos" class="mt-4">
-    <ul class="pagination justify-content-center">
+    <ul class="pagination custom-white justify-content-center">
 
       {# Botón Previous #}
       {% if productos.has_previous %}
@@ -177,13 +201,7 @@
   </nav>
 {% endif %}
 
-
 </div>
-
-
-
-
-
 
 
 <script>
