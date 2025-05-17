@@ -134,20 +134,56 @@
 
 
 <div class="pagination">
-    <span class="step-links">
-        {% if productos.has_previous %}
-            <a href="?{% if request.GET %}{{ request.GET.urlencode|safe }}&{% endif %}page=1">⏮ Primera</a>
-            <a href="?{% if request.GET %}{{ request.GET.urlencode|safe }}&{% endif %}page={{ productos.previous_page_number }}">⬅ Anterior</a>
-        {% endif %}
+{% if productos.has_other_pages %}
+  <nav aria-label="Paginación de productos" class="mt-4">
+    <ul class="pagination justify-content-center">
 
-        <span>Página {{ productos.number }} de {{ productos.paginator.num_pages }}</span>
+      {# Botón Previous #}
+      {% if productos.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href="?{% if request.GET %}{{ request.GET.urlencode|safe }}&{% endif %}page={{ productos.previous_page_number }}">Previous</a>
+        </li>
+      {% else %}
+        <li class="page-item disabled">
+          <span class="page-link">Previous</span>
+        </li>
+      {% endif %}
 
-        {% if productos.has_next %}
-            <a href="?{% if request.GET %}{{ request.GET.urlencode|safe }}&{% endif %}page={{ productos.next_page_number }}">Siguiente ➡</a>
-            <a href="?{% if request.GET %}{{ request.GET.urlencode|safe }}&{% endif %}page={{ productos.paginator.num_pages }}">Última ⏭</a>
+      {# Números de página #}
+      {% for num in productos.paginator.page_range %}
+        {% if num == productos.number %}
+          <li class="page-item active">
+            <span class="page-link">{{ num }}</span>
+          </li>
+        {% elif num >= productos.number|add:'-2' and num <= productos.number|add:'2' %}
+          <li class="page-item">
+            <a class="page-link" href="?{% if request.GET %}{{ request.GET.urlencode|safe }}&{% endif %}page={{ num }}">{{ num }}</a>
+          </li>
         {% endif %}
-    </span>
+      {% endfor %}
+
+      {# Botón Next #}
+      {% if productos.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?{% if request.GET %}{{ request.GET.urlencode|safe }}&{% endif %}page={{ productos.next_page_number }}">Next</a>
+        </li>
+      {% else %}
+        <li class="page-item disabled">
+          <span class="page-link">Next</span>
+        </li>
+      {% endif %}
+
+    </ul>
+  </nav>
+{% endif %}
+
+
 </div>
+
+
+
+
+
 
 
 <script>
