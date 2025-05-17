@@ -5,47 +5,70 @@
 {% block content %}
     <h1>📦 Lista de Productos</h1>
 
-    <form method="GET" action="{% url 'lista_productos' %}">
-        <input type="text" name="q" placeholder="Buscar por código o nombre" value="{{ request.GET.q }}">
-    
-        <label for="ubicacion">Ubicación:</label>
 
-        <select name="ubicacion" id="ubicacion">
-            <option value="">Todas las ubicaciones</option>
-            <option value="sin_ubicacion" {% if request.GET.ubicacion == "sin_ubicacion" %}selected{% endif %}>Sin ubicación</option>
-            {% for ubicacion in ubicaciones_disponibles %}
-                <option value="{{ ubicacion.nombre }}" {% if request.GET.ubicacion == ubicacion.nombre %}selected{% endif %}>{{ ubicacion.nombre }}</option>
-            {% endfor %}
-        </select>
-    
+<div class="card p-4 mb-4 shadow-sm">
+  <h5 class="card-title mb-3">🔎 Filtros de búsqueda</h5>
 
-        <label for="cantidad_filtro">Cantidad:</label>
-        <input type="text" name="cantidad_filtro" placeholder="Ej: >5, <=10, 3-7, =4" value="{{ request.GET.cantidad_filtro }}">
 
-     
-        <label for="estado_activo">Estado:</label>
-        <select name="estado_activo" id="estado_activo">
-            <option value="">Todos</option>
-            <option value="activos" {% if request.GET.estado_activo == "activos" %}selected{% endif %}>Solo activos</option>
-            <option value="inactivos" {% if request.GET.estado_activo == "inactivos" %}selected{% endif %}>Solo inactivos</option>
-        </select>
+<form method="GET" action="{% url 'lista_productos' %}" class="mb-4">
+  <div class="row g-3">
+    <div class="col-md-3">
+      <label for="q" class="form-label">Buscar por código o nombre</label>
+      <input type="text" name="q" id="q" class="form-control" placeholder="Ej: producto123" value="{{ request.GET.q }}">
+    </div>
 
-        <label for="alerta">Alerta:</label>
-        <select name="alerta" id="alerta">
-            <option value="">Todos</option>
-            <option value="activa" {% if request.GET.alerta == "activa" %}selected{% endif %}>Solo con alerta activa</option>
-            <option value="sin_alerta" {% if request.GET.alerta == "sin_alerta" %}selected{% endif %}>Solo sin alerta</option>
-        </select>
+    <div class="col-md-3">
+      <label for="ubicacion" class="form-label">Ubicación</label>
+      <select name="ubicacion" id="ubicacion" class="form-select">
+        <option value="">Todas las ubicaciones</option>
+        <option value="sin_ubicacion" {% if request.GET.ubicacion == "sin_ubicacion" %}selected{% endif %}>Sin ubicación</option>
+        {% for ubicacion in ubicaciones_disponibles %}
+          <option value="{{ ubicacion.nombre }}" {% if request.GET.ubicacion == ubicacion.nombre %}selected{% endif %}>{{ ubicacion.nombre }}</option>
+        {% endfor %}
+      </select>
+    </div>
 
-        <button type="submit">🔍 Buscar</button>
-    </form>
+    <div class="col-md-3">
+      <label for="cantidad_filtro" class="form-label">Cantidad</label>
+      <input type="text" name="cantidad_filtro" id="cantidad_filtro" class="form-control" placeholder="Ej: >5, <=10, 3-7, =4" value="{{ request.GET.cantidad_filtro }}">
+    </div>
 
-    <form method="get" action="{% url 'lista_productos' %}">
-        <button type="submit">🧹 Limpiar filtros</button>
-    </form>
+    <div class="col-md-3">
+      <label for="estado_activo" class="form-label">Estado</label>
+      <select name="estado_activo" id="estado_activo" class="form-select">
+        <option value="">Todos</option>
+        <option value="activos" {% if request.GET.estado_activo == "activos" %}selected{% endif %}>Solo activos</option>
+        <option value="inactivos" {% if request.GET.estado_activo == "inactivos" %}selected{% endif %}>Solo inactivos</option>
+      </select>
+    </div>
+
+
+<div class="col-md-3 d-flex align-items-end">
+  <div class="w-100">
+    <label for="alerta" class="form-label">Alerta:</label>
+    <select class="form-select" name="alerta" id="alerta">
+      <option value="">Todos</option>
+      <option value="activa" {% if request.GET.alerta == "activa" %}selected{% endif %}>Solo con alerta activa</option>
+      <option value="sin_alerta" {% if request.GET.alerta == "sin_alerta" %}selected{% endif %}>Solo sin alerta</option>
+    </select>
+  </div>
+</div>
+
+
+<div class="col-md-9 d-flex justify-content-end align-items-end gap-2">
+  <button type="submit" class="btn btn-primary px-4">🔍 Buscar</button>
+  <a href="{% url 'lista_productos' %}" class="btn btn-outline-secondary px-4">🧹 Limpiar filtros</a>
+</div>
+
+</div>
+
+</form>
+</div>
 
     <a href="{% url 'exportar_productos_excel' %}?{{ request.GET.urlencode }}" class="btn btn-success btn-sm">📊 Exportar Excel</a>
     <a href="{% url 'exportar_productos_pdf' %}?{{ request.GET.urlencode }}" class="btn btn-danger btn-sm">📄 Exportar PDF</a>
+
+
 
 <ul>
     {% if productos %}
@@ -89,6 +112,7 @@
         {% endif %}
     </span>
 </div>
+
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
