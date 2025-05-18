@@ -7,11 +7,24 @@ class UbicacionForm(forms.ModelForm):
         model = Ubicacion
         fields = ['nombre']
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs.update({'class': 'form-control'})
+
 
 class MovimientoInventarioForm(forms.ModelForm):
     class Meta:
         model = MovimientoInventario
         fields = ["tipo", "cantidad", "comentario"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            if isinstance(field.widget, forms.CheckboxInput):
+                field.widget.attrs.update({'class': 'form-check-input'})
+            else:
+                field.widget.attrs.update({'class': 'form-control'})
 
 
 class ProductoForm(forms.ModelForm):

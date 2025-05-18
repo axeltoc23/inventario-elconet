@@ -3,13 +3,28 @@
 {% block title %}Editar Ubicación{% endblock %}
 
 {% block content %}
-    <h1>✏️ Editar Ubicación</h1>
-
+<div class="card mt-4">
+  <div class="card-header">
+    <h5 class="mb-0">✏️ Editar Ubicación</h5>
+  </div>
+  <div class="card-body">
     <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Actualizar</button>
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+      {% for field in form %}
+        <div class="mb-3">
+          <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+          {{ field }}
+          {% if field.errors %}
+            <div class="text-danger small">{{ field.errors|striptags }}</div>
+          {% endif %}
+        </div>
+      {% endfor %}
+      <div class="d-flex justify-content-between">
+        <a href="{% url 'lista_ubicaciones' %}" class="btn btn-secondary">⬅️ Volver</a>
+        <button type="submit" class="btn btn-primary">💾 Actualizar</button>
+      </div>
     </form>
-
-    <a href="{% url 'lista_ubicaciones' %}">⬅️ Volver</a>
+  </div>
+</div>
 {% endblock %}
