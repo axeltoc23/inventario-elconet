@@ -37,20 +37,35 @@
       {% endfor %}
     {% endif %}
 
-    <form method="post">
-      {% csrf_token %}
-      <div class="mb-3">
-        <label for="username" class="form-label">👤 Usuario</label>
-        <input type="text" class="form-control" id="username" name="username" required autofocus>
+<form method="post">
+  {% csrf_token %}
+  <div class="mb-3">
+    <label for="username" class="form-label">👤 Usuario</label>
+    <input type="text" class="form-control" id="username" name="username" value="{{ request.POST.username }}" required autofocus>
+    {% if form.username.errors %}
+      <div class="text-danger small">
+        {{ form.username.errors.0 }}
       </div>
-      <div class="mb-3">
-        <label for="password" class="form-label">🔒 Contraseña</label>
-        <input type="password" class="form-control" id="password" name="password" required>
+    {% endif %}
+  </div>
+
+  <div class="mb-3">
+    <label for="password" class="form-label">🔒 Contraseña</label>
+    <input type="password" class="form-control" id="password" name="password" required>
+    {% if form.password.errors %}
+      <div class="text-danger small">
+        {{ form.password.errors.0 }}
       </div>
-      <div class="d-grid">
-        <button type="submit" class="btn btn-dark">Ingresar</button>
-      </div>
-    </form>
+    {% endif %}
+  </div>
+
+  <div class="d-grid">
+    <button type="submit" class="btn btn-dark">Ingresar</button>
+  </div>
+</form>
+
+
+
   </div>
 </div>
 
