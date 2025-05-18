@@ -127,6 +127,78 @@
   </div>
 </div>
 
+<div class="pagination">
+  <style>
+    .pagination.custom-white .page-link {
+      background-color: #ffffff;
+      color: #000000;
+      border: 1px solid #dee2e6;
+    }
+
+    .pagination.custom-white .page-link:hover {
+      background-color: #f2f2f2;
+      color: #000000;
+    }
+
+    .pagination.custom-white .page-item.active .page-link {
+      background-color: #000000;
+      border-color: #000000;
+      color: #ffffff;
+    }
+
+    .pagination.custom-white .page-item.disabled .page-link {
+      background-color: #ffffff;
+      color: #6c757d;
+    }
+  </style>
+
+  {% if movimientos.has_other_pages %}
+    <nav aria-label="Paginación del historial" class="mt-4">
+      <ul class="pagination custom-white justify-content-center">
+
+        {# Botón Previous #}
+        {% if movimientos.has_previous %}
+          <li class="page-item">
+            <a class="page-link" href="?{% if request.GET %}{{ request.GET.urlencode|safe }}&{% endif %}page={{ movimientos.previous_page_number }}">Previous</a>
+          </li>
+        {% else %}
+          <li class="page-item disabled">
+            <span class="page-link">Previous</span>
+          </li>
+        {% endif %}
+
+        {# Números de página #}
+        {% for num in movimientos.paginator.page_range %}
+          {% if num == movimientos.number %}
+            <li class="page-item active">
+              <span class="page-link">{{ num }}</span>
+            </li>
+          {% elif num >= movimientos.number|add:'-2' and num <= movimientos.number|add:'2' %}
+            <li class="page-item">
+              <a class="page-link" href="?{% if request.GET %}{{ request.GET.urlencode|safe }}&{% endif %}page={{ num }}">{{ num }}</a>
+            </li>
+          {% endif %}
+        {% endfor %}
+
+        {# Botón Next #}
+        {% if movimientos.has_next %}
+          <li class="page-item">
+            <a class="page-link" href="?{% if request.GET %}{{ request.GET.urlencode|safe }}&{% endif %}page={{ movimientos.next_page_number }}">Next</a>
+          </li>
+        {% else %}
+          <li class="page-item disabled">
+            <span class="page-link">Next</span>
+          </li>
+        {% endif %}
+
+      </ul>
+    </nav>
+  {% endif %}
+</div>
+
+
+
+
 <div class="mt-4">
   <a href="{% url 'lista_productos' %}" class="btn btn-secondary">⬅️ Volver a Productos</a>
 </div>

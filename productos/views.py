@@ -92,7 +92,12 @@ def agregar_producto(request):
 @login_required
 def gestionar_producto(request, producto_id):
     producto = Producto.objects.get(id=producto_id)
-    movimientos = producto.movimientoinventario_set.all().order_by("-fecha")
+
+    movimientos_queryset = MovimientoInventario.objects.filter(producto=producto).order_by("-fecha")
+    paginator = Paginator(movimientos_queryset, 5)  # Cambia 10 por la cantidad que desees por página
+    page_number = request.GET.get("page")
+    movimientos = paginator.get_page(page_number)
+
 
     # Inicializamos formularios por defecto
     movimiento_form = MovimientoInventarioForm(initial={"producto": producto})
@@ -104,10 +109,10 @@ def gestionar_producto(request, producto_id):
             if not (es_administrador(request.user) or es_supervisor(request.user) or es_almacen(request.user)):
                 # No tiene permiso, se renderiza con formularios ya inicializados
                 return render(request, "productos/gestionar_producto.html", {
-                    "movimiento_form": movimiento_form,
                     "producto_form": producto_form,
                     "producto": producto,
-                    "movimientos": movimientos
+                    "movimientos": page_obj,
+                    "movimiento_form": movimiento_form,
                 })
 
             movimiento_form = MovimientoInventarioForm(request.POST)
