@@ -1,18 +1,32 @@
-<!-- agregar_producto.html -->
-
 {% extends "productos/base.html" %}
 
 {% block title %}Agregar Producto{% endblock %}
 
 {% block content %}
-    <h1>➕ Agregar Producto</h1>
+<h1>➕ Agregar Producto</h1>
+<div class="card mt-4">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <h5 class="mb-0">➕ Formulario de ingreso</h5>
+  </div>
+  <div class="card-body">
+    <form method="post" novalidate>
+      {% csrf_token %}
 
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
+      {% for field in form %}
+        <div class="mb-3">
+          <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+          {{ field }}
+          {% if field.help_text %}
+            <div class="form-text">{{ field.help_text }}</div>
+          {% endif %}
+          {% if field.errors %}
+            <div class="text-danger small">{{ field.errors }}</div>
+          {% endif %}
+        </div>
+      {% endfor %}
 
-        <button type="submit">Guardar</button>
+      <button type="submit" class="btn btn-primary px-4">💾 Guardar</button>
     </form>
-
-    <a href="{% url 'lista_productos' %}">⬅️ Volver</a>
+  </div>
+</div>
 {% endblock %}

@@ -19,10 +19,17 @@ class ProductoForm(forms.ModelForm):
         model = Producto
         fields = ['nombre', 'ubicacion', 'alerta_stock', 'alerta_activa', 'activo']
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            if isinstance(field.widget, forms.CheckboxInput):
+                field.widget.attrs.update({'class': 'form-check-input'})
+            else:
+                field.widget.attrs.update({'class': 'form-control'})
+
     def clean_nombre(self):
         nombre = self.cleaned_data.get('nombre')
         producto_id = self.instance.id
-        # Verificamos si ya existe un producto con el mismo nombre, no importando que tenga mayusculas o minusculas
         if Producto.objects.filter(nombre__iexact=nombre).exclude(id=producto_id).exists():
             raise forms.ValidationError("Ya existe un producto con ese nombre. Por favor, elige otro.")
         return nombre
