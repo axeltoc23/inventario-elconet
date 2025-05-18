@@ -3,55 +3,131 @@
 {% block title %}Gestionar {{ producto.nombre }}{% endblock %}
 
 {% block content %}
-    <h1>📦 Gestionar {{ producto.codigo }} - {{ producto.nombre }} - Stock: {{ producto.cantidad }} - Ubicación: {{ producto.ubicacion }} - Alerta: {% if producto.alerta_activa %}
-                ✔️ (Mínimo: {{ producto.alerta_stock }})
-            {% else %}
-                ❌
-            {% endif %} - Estado: {% if producto.activo %}
-                ✅ Activo
-            {% else %}
-                🚫 Desactivado
-            {% endif %}</h1>
+<div class="card mt-4">
+  <div class="card-header">
+    <h5 class="mb-0">📦 Gestionar Producto</h5>
+  </div>
+  <div class="card-body">
+    <p>
+      <strong>🔢 Código:</strong> {{ producto.codigo }}<br>
+      <strong>📛 Nombre:</strong> {{ producto.nombre }}<br>
+      <strong>📦 Stock:</strong> {{ producto.cantidad }}<br>
+      <strong>📍 Ubicación:</strong> {{ producto.ubicacion|default:"-" }}<br>
+      <strong>🚨 Alerta:</strong>
+      {% if producto.alerta_activa %}
+        ✔️ (Mínimo: {{ producto.alerta_stock }})
+      {% else %}
+        ❌
+      {% endif %}<br>
+      <strong>⚙️ Estado:</strong>
+      {% if producto.activo %}
+        <span class="badge bg-success">✅ Activo</span>
+      {% else %}
+        <span class="badge bg-danger">🚫 Desactivado</span>
+      {% endif %}
+    </p>
+  </div>
+</div>
 
-    {% if request.user.groups.all.0.name in "Administrador,Supervisor" %}
-        <!-- Formulario de Edición de Producto -->
-        <h2>✏️ Editar Producto</h2>
-        <form method="post">
-            {% csrf_token %}
-            {{ producto_form.as_p }}
-            <button type="submit" name="editar">Guardar cambios</button>
-        </form>
-        <hr>
-    {% endif %}
-
-    {% if request.user.groups.all.0.name in "Administrador,Supervisor,Almacen" %}
-        {% if producto.activo %}
-            <!-- Formulario para Gestión de Inventario -->
-            <h2>📊 Gestión de Inventario</h2>
-            <form method="post">
-                {% csrf_token %}
-                {{ movimiento_form.as_p }}
-                <button type="submit" name="movimiento">Registrar Movimiento</button>
-            </form>
-            <hr>
-        {% else %}
-            <p style="color: red;"><strong>🚫 Este producto está deshabilitado. No se pueden registrar movimientos.</strong></p>
-            <hr>
-        {% endif %}
-    {% endif %}
-
-    <!-- Historial de Movimientos (Visible para todos) -->
-    <h2>📜 Historial</h2>
-    <ul>
-        {% for movimiento in movimientos %}
-            <li>
-                📅 {{ movimiento.fecha|date:"d/m/Y H:i" }} -
-                {{ movimiento.tipo|title }} de {{ movimiento.cantidad }} -
-                🏷️ {{ movimiento.producto.codigo }} - {{ movimiento.nombre_producto }}
-                {% if movimiento.comentario %} 📝 ({{ movimiento.comentario }}){% endif %}
-            </li>
+{% if request.user.groups.all.0.name in "Administrador,Supervisor" %}
+  <div class="card mt-4">
+    <div class="card-header">
+      <h5 class="mb-0">✏️ Editar Producto</h5>
+    </div>
+    <div class="card-body">
+      <form method="post">
+        {% csrf_token %}
+        {% for field in producto_form %}
+          <div class="mb-3">
+            <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}
+              <div class="text-danger small">{{ field.errors|striptags }}</div>
+            {% endif %}
+          </div>
         {% endfor %}
-    </ul>
+        <button type="submit" name="editar" class="btn btn-primary">Guardar cambios</button>
+      </form>
+    </div>
+  </div>
+{% endif %}
 
-    <a href="{% url 'lista_productos' %}">⬅️ Volver</a>
+{% if request.user.groups.all.0.name in "Administrador,Supervisor,Almacen" %}
+  {% if producto.activo %}
+    <div class="card mt-4">
+      <div class="card-header">
+        <h5 class="mb-0">📊 Gestión de Inventario</h5>
+      </div>
+      <div class="card-body">
+        <form method="post">
+          {% csrf_token %}
+          {% for field in movimiento_form %}
+            <div class="mb-3">
+              <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+              {{ field }}
+              {% if field.errors %}
+                <div class="text-danger small">{{ field.errors|striptags }}</div>
+              {% endif %}
+            </div>
+          {% endfor %}
+          <button type="submit" name="movimiento" class="btn btn-success">Registrar Movimiento</button>
+        </form>
+      </div>
+    </div>
+  {% else %}
+    <div class="alert alert-danger mt-4">
+      🚫 Este producto está deshabilitado. No se pueden registrar movimientos.
+    </div>
+  {% endif %}
+{% endif %}
+
+<div class="card mt-4">
+  <div class="card-header">
+    <h5 class="mb-0">📜 Historial de Movimientos</h5>
+  </div>
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-striped table-hover mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>Fecha</th>
+            <th>Código</th>
+            <th>Producto</th>
+            <th>Tipo</th>
+            <th>Cantidad</th>
+            <th>Comentario</th>
+            <th>Usuario</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for movimiento in movimientos %}
+          <tr>
+            <td>{{ movimiento.fecha|date:"d/m/Y H:i" }}</td>
+            <td>{{ movimiento.producto.codigo }}</td>
+            <td>{{ movimiento.nombre_producto }}</td>
+            <td>{{ movimiento.tipo|title }}</td>
+            <td>{{ movimiento.cantidad }}</td>
+            <td>{{ movimiento.comentario|default:"-" }}</td>
+            <td>
+              {% if movimiento.usuario %}
+                {{ movimiento.usuario.get_full_name|default:movimiento.usuario.username }}
+              {% else %}
+                <em class="text-muted">Usuario no registrado</em>
+              {% endif %}
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="7" class="text-center text-muted py-4">No hay movimientos registrados.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="mt-4">
+  <a href="{% url 'lista_productos' %}" class="btn btn-secondary">⬅️ Volver a Productos</a>
+</div>
 {% endblock %}
