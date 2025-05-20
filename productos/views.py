@@ -343,6 +343,9 @@ def filtrar_movimientos(request):
                 fecha = datetime.strptime(fecha_filtro, "%d-%m-%Y").date()
                 movimientos = movimientos.filter(fecha__date=fecha)
 
+            else:
+                error_fecha = "Formato de fecha no válido. Usa uno como: 01-05-2024, <=01-05-2024, 01-05-2024-10-05-2024"
+
         except ValueError:
                 error_fecha = "Fecha mal formada, usa el formato día-mes-año"
 
