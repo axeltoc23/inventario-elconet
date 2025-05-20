@@ -13,8 +13,6 @@ def user_login(request):
             user = form.get_user()
             login(request, user)
             return redirect("lista_productos")
-        else:
-            messages.error(request, "Usuario o contraseña incorrectos.")
 
     return render(request, "usuarios/login.html", {"form": form})
 

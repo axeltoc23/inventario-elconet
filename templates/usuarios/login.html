@@ -1,4 +1,5 @@
 {% load static %}
+{% load form_tags %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -37,27 +38,37 @@
       {% endfor %}
     {% endif %}
 
-<form method="post">
+<form method="post" novalidate>
   {% csrf_token %}
+
+  <!-- Campo de Usuario -->
   <div class="mb-3">
-    <label for="username" class="form-label">👤 Usuario</label>
-    <input type="text" class="form-control" id="username" name="username" value="{{ request.POST.username }}" required autofocus>
+    <label for="{{ form.username.id_for_label }}" class="form-label">👤 Usuario</label>
+    {{ form.username|add_class:"form-control" }}
     {% if form.username.errors %}
-      <div class="text-danger small">
+      <div class="text-danger small mt-1">
         {{ form.username.errors.0 }}
       </div>
     {% endif %}
   </div>
 
+  <!-- Campo de Contraseña -->
   <div class="mb-3">
-    <label for="password" class="form-label">🔒 Contraseña</label>
-    <input type="password" class="form-control" id="password" name="password" required>
+    <label for="{{ form.password.id_for_label }}" class="form-label">🔒 Contraseña</label>
+    {{ form.password|add_class:"form-control" }}
     {% if form.password.errors %}
-      <div class="text-danger small">
+      <div class="text-danger small mt-1">
         {{ form.password.errors.0 }}
       </div>
     {% endif %}
   </div>
+
+  <!-- Errores no relacionados a campos específicos (ej. autenticación fallida) -->
+  {% if form.non_field_errors %}
+    <div class="alert alert-danger">
+      {{ form.non_field_errors.0 }}
+    </div>
+  {% endif %}
 
   <div class="d-grid">
     <button type="submit" class="btn btn-dark">Ingresar</button>
