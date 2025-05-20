@@ -49,6 +49,12 @@
   </div>
 </div>
 
+{% if error_fecha %}
+  <div class="alert alert-danger" role="alert">
+    ⚠️ {{ error_fecha }}
+  </div>
+{% endif %}
+
 <div class="card mt-4">
   <div class="card-header">
     <h5 class="mb-0">📋 Historial de movimientos</h5>

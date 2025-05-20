@@ -173,7 +173,7 @@ def historial_movimientos(request):
     query = request.GET.get("q", "").strip()
     tipo = request.GET.get("tipo")
     fecha_filtro = request.GET.get("fecha_filtro", "").strip()
-    movimientos = filtrar_movimientos(request)
+    movimientos, error_fecha = filtrar_movimientos(request)
 
     # Paginación
     paginator = Paginator(movimientos, 20)  # 20 por página
@@ -186,6 +186,7 @@ def historial_movimientos(request):
         "page_obj": page_obj,
         "query": query,
         "fecha_filtro": fecha_filtro,
+        "error_fecha": error_fecha,
     })
 
 
@@ -293,6 +294,7 @@ def filtrar_movimientos(request):
     tipo = request.GET.get("tipo")
     fecha_filtro = request.GET.get("fecha_filtro", "").strip()
     movimientos = MovimientoInventario.objects.all().order_by("-fecha")
+    error_fecha = None
 
     if query:
         movimientos = movimientos.filter(
@@ -304,44 +306,47 @@ def filtrar_movimientos(request):
     if tipo in ["entrada", "salida"]:
         movimientos = movimientos.filter(tipo=tipo)
 
-
     if fecha_filtro:
-        fecha_filtro = fecha_filtro.replace(" ", "").replace("/", "-")  # Normaliza separadores a guiones
+        # Normaliza separadores: convierte . y / a -
+        fecha_filtro = fecha_filtro.replace(" ", "").replace("/", "-").replace(".", "-")
         try:
-            if re.match(r"^\d{2}-\d{2}-\d{4}-\d{2}-\d{2}-\d{4}$", fecha_filtro):  # Rango
-                inicio_str, fin_str = fecha_filtro.split("-")[0:3], fecha_filtro.split("-")[3:6]
-                fecha_inicio = datetime.strptime("-".join(inicio_str), "%d-%m-%Y").date()
-                fecha_fin = datetime.strptime("-".join(fin_str), "%d-%m-%Y").date()
+            # Rango tipo: 1-6-2025-15-6-2025
+            if re.match(r"^\d{1,2}-\d{1,2}-\d{4}-\d{1,2}-\d{1,2}-\d{4}$", fecha_filtro):
+                partes = fecha_filtro.split("-")
+                inicio_str = f"{partes[0]}-{partes[1]}-{partes[2]}"
+                fin_str = f"{partes[3]}-{partes[4]}-{partes[5]}"
+                fecha_inicio = datetime.strptime(inicio_str, "%d-%m-%Y").date()
+                fecha_fin = datetime.strptime(fin_str, "%d-%m-%Y").date()
                 movimientos = movimientos.filter(fecha__date__gte=fecha_inicio, fecha__date__lte=fecha_fin)
 
-            elif re.match(r"^>=\d{2}-\d{2}-\d{4}$", fecha_filtro):
+            elif re.match(r"^>=\d{1,2}-\d{1,2}-\d{4}$", fecha_filtro):
                 fecha = datetime.strptime(fecha_filtro[2:], "%d-%m-%Y").date()
                 movimientos = movimientos.filter(fecha__date__gte=fecha)
 
-            elif re.match(r"^<=\d{2}-\d{2}-\d{4}$", fecha_filtro):
+            elif re.match(r"^<=\d{1,2}-\d{1,2}-\d{4}$", fecha_filtro):
                 fecha = datetime.strptime(fecha_filtro[2:], "%d-%m-%Y").date()
                 movimientos = movimientos.filter(fecha__date__lte=fecha)
 
-            elif re.match(r"^>\d{2}-\d{2}-\d{4}$", fecha_filtro):
+            elif re.match(r"^>\d{1,2}-\d{1,2}-\d{4}$", fecha_filtro):
                 fecha = datetime.strptime(fecha_filtro[1:], "%d-%m-%Y").date()
                 movimientos = movimientos.filter(fecha__date__gt=fecha)
 
-            elif re.match(r"^<\d{2}-\d{2}-\d{4}$", fecha_filtro):
+            elif re.match(r"^<\d{1,2}-\d{1,2}-\d{4}$", fecha_filtro):
                 fecha = datetime.strptime(fecha_filtro[1:], "%d-%m-%Y").date()
                 movimientos = movimientos.filter(fecha__date__lt=fecha)
 
-            elif re.match(r"^=\d{2}-\d{2}-\d{4}$", fecha_filtro):
+            elif re.match(r"^=\d{1,2}-\d{1,2}-\d{4}$", fecha_filtro):
                 fecha = datetime.strptime(fecha_filtro[1:], "%d-%m-%Y").date()
                 movimientos = movimientos.filter(fecha__date=fecha)
 
-            elif re.match(r"^\d{2}-\d{2}-\d{4}$", fecha_filtro):  # Solo fecha exacta sin "="
+            elif re.match(r"^\d{1,2}-\d{1,2}-\d{4}$", fecha_filtro):  # Fecha exacta sin =
                 fecha = datetime.strptime(fecha_filtro, "%d-%m-%Y").date()
                 movimientos = movimientos.filter(fecha__date=fecha)
 
         except ValueError:
-            pass
+                error_fecha = "Fecha mal formada, usa el formato día-mes-año"
 
-    return movimientos
+    return movimientos, error_fecha
 
 
 def filtrar_productos(request):
