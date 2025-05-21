@@ -71,3 +71,9 @@
     background-color: #000;
     color: #fff;
 }
+
+/* Checkbox estilo negro */
+input[type="checkbox"],
+.form-check-input {
+    accent-color: #212529 !important;
+}
