@@ -113,3 +113,21 @@ input[type="checkbox"].form-check-input:checked::before {
 input[type="checkbox"].form-check-input:hover {
     opacity: 0.8;
 }
+
+/* =====================
+   ELIMINAR RESPLANDOR AZUL DE BOOTSTRAP
+   ===================== */
+
+/* Para inputs, textareas y selects */
+.form-control:focus,
+.form-select:focus,
+.form-check-input:focus {
+    border-color: #000 !important;  /* Borde negro al enfocar */
+    box-shadow: 0 0 0 0.25rem rgba(128, 128, 128, 0.25) !important; /* Sombra gris */
+    outline: 0 !important; /* Opcional: Eliminar outline por defecto del navegador */
+}
+
+/* Para checkboxes (si usaste la solución anterior) */
+input[type="checkbox"].form-check-input:focus {
+    box-shadow: 0 0 0 0.25rem rgba(128, 128, 128, 0.25) !important;
+}
