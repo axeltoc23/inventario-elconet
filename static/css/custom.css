@@ -72,8 +72,44 @@
     color: #fff;
 }
 
-/* Checkbox estilo negro */
-input[type="checkbox"],
-.form-check-input {
-    accent-color: #212529 !important;
+/* =====================
+   CHECKBOX NEGRO PERSONALIZADO (✓)
+   ===================== */
+
+/* Oculta el checkbox por defecto */
+input[type="checkbox"].form-check-input {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #000;
+    border-radius: 3px;
+    outline: none;
+    cursor: pointer;
+    vertical-align: middle;
+    position: relative;
+    margin-right: 8px;
+}
+
+/* Checkbox marcado (✓ negro sobre fondo blanco) */
+input[type="checkbox"].form-check-input:checked {
+    background-color: #000;
+    border-color: #000;
+}
+
+/* Palomita (✓) blanca cuando está seleccionado */
+input[type="checkbox"].form-check-input:checked::before {
+    content: "✓";
+    position: absolute;
+    color: white;
+    font-size: 12px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Estilo al hacer hover */
+input[type="checkbox"].form-check-input:hover {
+    opacity: 0.8;
 }
