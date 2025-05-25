@@ -20,16 +20,17 @@
   </div>
 
 <div class="card-body">
-<form method="GET" action="{% url 'lista_productos' %}" class="mb-4">
+
+<form method="GET" action="{% url 'lista_productos' %}" class="mb-4" autocomplete="off">
   <div class="row g-3">
     <div class="col-md-3">
       <label for="q" class="form-label">Buscar por código o nombre</label>
-      <input type="text" name="q" id="q" class="form-control" placeholder="Ej: producto123" value="{{ request.GET.q }}">
+      <input type="text" name="q" id="q" class="form-control" placeholder="Ej: producto123" value="{{ request.GET.q }}" autocomplete="nope">
     </div>
 
     <div class="col-md-3">
       <label for="ubicacion" class="form-label">Ubicación</label>
-      <select name="ubicacion" id="ubicacion" class="form-select">
+      <select name="ubicacion" id="ubicacion" class="form-select" autocomplete="nope">
         <option value="">Todas las ubicaciones</option>
         <option value="sin_ubicacion" {% if request.GET.ubicacion == "sin_ubicacion" %}selected{% endif %}>Sin ubicación</option>
         {% for ubicacion in ubicaciones_disponibles %}
@@ -40,39 +41,37 @@
 
     <div class="col-md-3">
       <label for="cantidad_filtro" class="form-label">Cantidad</label>
-      <input type="text" name="cantidad_filtro" id="cantidad_filtro" class="form-control" placeholder="Ej: >5, <=10, 3-7, =4" value="{{ request.GET.cantidad_filtro }}">
+      <input type="text" name="cantidad_filtro" id="cantidad_filtro" class="form-control" placeholder="Ej: >5, <=10, 3-7, =4" value="{{ request.GET.cantidad_filtro }}" autocomplete="nope">
     </div>
 
     <div class="col-md-3">
       <label for="estado_activo" class="form-label">Estado</label>
-      <select name="estado_activo" id="estado_activo" class="form-select">
+      <select name="estado_activo" id="estado_activo" class="form-select" autocomplete="nope">
         <option value="">Todos</option>
         <option value="activos" {% if request.GET.estado_activo == "activos" %}selected{% endif %}>Solo activos</option>
         <option value="inactivos" {% if request.GET.estado_activo == "inactivos" %}selected{% endif %}>Solo inactivos</option>
       </select>
     </div>
 
+    <div class="col-md-3 d-flex align-items-end">
+      <div class="w-100">
+        <label for="alerta" class="form-label">Alerta:</label>
+        <select class="form-select" name="alerta" id="alerta" autocomplete="nope">
+          <option value="">Todos</option>
+          <option value="activa" {% if request.GET.alerta == "activa" %}selected{% endif %}>Solo con alerta activa</option>
+          <option value="sin_alerta" {% if request.GET.alerta == "sin_alerta" %}selected{% endif %}>Solo sin alerta</option>
+        </select>
+      </div>
+    </div>
 
-<div class="col-md-3 d-flex align-items-end">
-  <div class="w-100">
-    <label for="alerta" class="form-label">Alerta:</label>
-    <select class="form-select" name="alerta" id="alerta">
-      <option value="">Todos</option>
-      <option value="activa" {% if request.GET.alerta == "activa" %}selected{% endif %}>Solo con alerta activa</option>
-      <option value="sin_alerta" {% if request.GET.alerta == "sin_alerta" %}selected{% endif %}>Solo sin alerta</option>
-    </select>
+    <div class="col-md-9 d-flex justify-content-end align-items-end gap-2">
+      <button type="submit" class="btn btn-outline-dark px-4">🔍 Buscar</button>
+      <a href="{% url 'lista_productos' %}" class="btn btn-outline-secondary px-4">🧹 Limpiar filtros</a>
+    </div>
   </div>
-</div>
-
-
-<div class="col-md-9 d-flex justify-content-end align-items-end gap-2">
-  <button type="submit" class="btn btn-outline-dark px-4">🔍 Buscar</button>
-  <a href="{% url 'lista_productos' %}" class="btn btn-outline-secondary px-4">🧹 Limpiar filtros</a>
-</div>
-
-</div>
-
 </form>
+
+
 </div>
 </div>
 

@@ -147,7 +147,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Informacion para la utilizacion de TELEGRAM
 TELEGRAM_BOT_TOKEN = "7512055988:AAF3pQ7kAlxf63O_9PsUQITqfmwzqYgEgiw"
-TELEGRAM_CHAT_ID = "5481766894"
+TELEGRAM_CHAT_ID = -4985420036
 
 # URLs que manejaran el movimiento de nuestra pagina
 # Gestionar las URL de autenticación
