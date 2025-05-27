@@ -1,0 +1,12 @@
+[Unit]
+Description=Enviar IP al grupo de Telegram al iniciar
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/opt/mi_proyecto/enviar_ip.py
+RemainAfterExit=true
+
+[Install]
+WantedBy=multi-user.target
