@@ -273,7 +273,7 @@ def exportar_historial_excel(request):
 
 @login_required
 def exportar_historial_pdf(request):
-    movimientos = filtrar_movimientos(request)
+    movimientos, _ = filtrar_movimientos(request)
 
     # Renderizar plantilla HTML a PDF
     template = get_template("productos/pdf_historial.html")
