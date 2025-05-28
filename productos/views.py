@@ -235,8 +235,8 @@ def eliminar_ubicacion(request, ubicacion_id):
 
 @login_required
 def exportar_historial_excel(request):
-    movimientos = filtrar_movimientos(request)
-
+    movimientos = filtrar_movimientos(request)[0]
+    print(movimientos)
     # Crear archivo en memoria
     output = BytesIO()
     workbook = xlsxwriter.Workbook(output)
@@ -273,7 +273,7 @@ def exportar_historial_excel(request):
 
 @login_required
 def exportar_historial_pdf(request):
-    movimientos, _ = filtrar_movimientos(request)
+    movimientos = filtrar_movimientos(request)[0]
 
     # Renderizar plantilla HTML a PDF
     template = get_template("productos/pdf_historial.html")
