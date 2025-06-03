@@ -11,7 +11,7 @@ Este directorio contiene los scripts y servicios necesarios para que el servidor
 - `iniciar_servidor.py`: Script que arranca Django, ngrok, Celery, etc.
 
 ### Servicios a copiar en `/etc/systemd/system/`
-- `notificar-ip.service`: Servicio systemd que lanza `notificar_ip.py` al arrancar.
+- `notificar_ip.service`: Servicio systemd que lanza `notificar_ip.py` al arrancar.
 - `mi_servidor.service`: Servicio systemd que lanza `iniciar_servidor.py`.
 
 ---
@@ -23,16 +23,16 @@ Este directorio contiene los scripts y servicios necesarios para que el servidor
    sudo mkdir -p /opt/autoarranque
 ````
 
-2. Copia los scripts a `/opt/mi_proyecto/`:
+2. Copia los scripts a `/opt/autoarranque/`:
 
    ```bash
-   sudo cp notificar_ip.py iniciar_servidor.py /opt/mi_proyecto/
+   sudo cp notificar_ip.py iniciar_servidor.py /opt/autoarranque/
    ```
 
 3. Copia los servicios a `/etc/systemd/system/`:
 
    ```bash
-   sudo cp notificar-ip.service mi_servidor.service /etc/systemd/system/
+   sudo cp notificar_ip.service mi_servidor.service /etc/systemd/system/
    ```
 
 4. Da permisos de ejecución a los scripts:
@@ -47,16 +47,16 @@ Este directorio contiene los scripts y servicios necesarios para que el servidor
    ```bash
    sudo systemctl daemon-reexec
    sudo systemctl daemon-reload
-   sudo systemctl enable notificar-ip.service
+   sudo systemctl enable notificar_ip.service
    sudo systemctl enable mi_servidor.service
-   sudo systemctl start notificar-ip.service
+   sudo systemctl start notificar_ip.service
    sudo systemctl start mi_servidor.service
    ```
 
 6. Verifica que estén activos:
 
    ```bash
-   systemctl status enviar-ip.service
+   systemctl status notificar_ip.service
    systemctl status mi_servidor.service
    ```
 
