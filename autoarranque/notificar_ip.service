@@ -1,0 +1,16 @@
+[Unit]
+Description=Enviar IP por Telegram al inicio del sistema
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /opt/autoarranque/notificar_ip.py
+Restart=on-failure
+StandardOutput=journal
+StandardError=journal
+User=elconet
+WorkingDirectory=/opt/autoarranque/
+
+[Install]
+WantedBy=multi-user.target

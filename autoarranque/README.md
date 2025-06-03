@@ -6,12 +6,12 @@ Este directorio contiene los scripts y servicios necesarios para que el servidor
 
 ## 📁 Estructura de archivos
 
-### Scripts a copiar en `/opt/mi_proyecto/`
-- `envar_ip.py`: Script que envía la IP pública por Telegram al iniciar.
+### Scripts a copiar en `/opt/autoarranque/`
+- `notificar_ip.py`: Script que envía la IP de Django por Telegram al iniciar.
 - `iniciar_servidor.py`: Script que arranca Django, ngrok, Celery, etc.
 
 ### Servicios a copiar en `/etc/systemd/system/`
-- `enviar-ip.service`: Servicio systemd que lanza `envar_ip.py` al arranque.
+- `notificar-ip.service`: Servicio systemd que lanza `notificar_ip.py` al arrancar.
 - `mi_servidor.service`: Servicio systemd que lanza `iniciar_servidor.py`.
 
 ---
@@ -20,25 +20,25 @@ Este directorio contiene los scripts y servicios necesarios para que el servidor
 
 1. Crea la carpeta de destino si no existe:
    ```bash
-   sudo mkdir -p /opt/mi_proyecto
+   sudo mkdir -p /opt/autoarranque
 ````
 
 2. Copia los scripts a `/opt/mi_proyecto/`:
 
    ```bash
-   sudo cp envar_ip.py iniciar_servidor.py /opt/mi_proyecto/
+   sudo cp notificar_ip.py iniciar_servidor.py /opt/mi_proyecto/
    ```
 
 3. Copia los servicios a `/etc/systemd/system/`:
 
    ```bash
-   sudo cp enviar-ip.service mi_servidor.service /etc/systemd/system/
+   sudo cp notificar-ip.service mi_servidor.service /etc/systemd/system/
    ```
 
 4. Da permisos de ejecución a los scripts:
 
    ```bash
-   sudo chmod +x /opt/mi_proyecto/envar_ip.py
+   sudo chmod +x /opt/autoarranque/notificar_ip.py
    sudo chmod +x /opt/mi_proyecto/iniciar_servidor.py
    ```
 
@@ -47,9 +47,9 @@ Este directorio contiene los scripts y servicios necesarios para que el servidor
    ```bash
    sudo systemctl daemon-reexec
    sudo systemctl daemon-reload
-   sudo systemctl enable enviar-ip.service
+   sudo systemctl enable notificar-ip.service
    sudo systemctl enable mi_servidor.service
-   sudo systemctl start enviar-ip.service
+   sudo systemctl start notificar-ip.service
    sudo systemctl start mi_servidor.service
    ```
 
@@ -64,7 +64,7 @@ Este directorio contiene los scripts y servicios necesarios para que el servidor
 
 ## 🔁 Notas
 
-* Asegúrate de tener configurado correctamente `envar_ip.py` con tu token y chat ID de Telegram.
+* Asegúrate de tener configurado correctamente `notificar_ip.py` con tu token y chat ID de Telegram.
 * Puedes editar los archivos `.service` para ajustar el usuario o ruta si cambian.
 
 ---
