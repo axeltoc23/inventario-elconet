@@ -3,12 +3,12 @@ import subprocess
 import time
 import logging
 import requests
+import sys
 
-LOG_FILE = "/tmp/lanzar_backend.log"
 SCRIPT_BASH = "/home/axel/Documents/inventario-elconet/iniciar_servidor.sh"
 
 logging.basicConfig(
-    filename=LOG_FILE,
+    stream=sys.stdout,  # Cambiado para loggear en stdout en lugar de archivo
     level=logging.INFO,
     format='%(asctime)s - %(message)s'
 )
