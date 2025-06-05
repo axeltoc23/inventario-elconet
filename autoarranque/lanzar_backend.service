@@ -1,0 +1,17 @@
+[Unit]
+Description=Inicia Django + Ngrok + Celery al arrancar
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=axel
+WorkingDirectory=/opt/autoarranque
+ExecStart=/usr/bin/python3 /opt/autoarranque/lanzar_backend.py
+Restart=always
+RestartSec=10s
+StandardOutput=append:/tmp/lanzar_backend.log
+StandardError=append:/tmp/lanzar_backend_error.log
+
+[Install]
+WantedBy=multi-user.target
