@@ -4,6 +4,7 @@
 PROYECTO_DIR="/home/$USER/Documents/inventario-elconet"
 ENTORNO_VIRTUAL="$PROYECTO_DIR/env/bin/activate"
 NGROK_BIN="/usr/local/bin/ngrok"
+GUNICORN_BIN="$PROYECTO_DIR/env/bin/gunicorn"
 
 # === VARIABLES DEL BOT ===
 BOT_TOKEN="7512055988:AAF3pQ7kAlxf63O_9PsUQITqfmwzqYgEgiw"
@@ -18,7 +19,7 @@ get_local_ip() {
 # === FUNCIÓN PARA ENVIAR MENSAJE A TELEGRAM ===
 send_telegram_msg() {
     local ip="$1"
-    local msg="🚀 Servidor Django iniciado correctamente%0A🔗 IP local: http://${ip}:8000"
+    local msg="🚀 Servidor Django con Gunicorn iniciado%0A🔗 IP local: http://${ip}"
     curl -s -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage" \
         -d "chat_id=${CHAT_ID}" \
         -d "text=${msg}" \
@@ -27,11 +28,11 @@ send_telegram_msg() {
 
 # === INICIO DEL SCRIPT ===
 
-# PASO 1: Activar entorno y ejecutar Django
+# PASO 1: Activar entorno y ejecutar Gunicorn
 cd "$PROYECTO_DIR"
 source "$ENTORNO_VIRTUAL"
-python manage.py runserver 0.0.0.0:8000 &
-sleep 2
+$GUNICORN_BIN --workers 3 --bind 0.0.0.0:8000 inventario.wsgi:application &
+sleep 3
 
 # PASO 2: Ejecutar ngrok
 deactivate
@@ -61,4 +62,4 @@ celery -A inventario worker -l info &
 LOCAL_IP=$(get_local_ip)
 send_telegram_msg "$LOCAL_IP"
 
-echo "✅ Servidor iniciado. Notificación enviada a Telegram."
+echo "✅ Servidor iniciado con Gunicorn. Notificación enviada a Telegram."
