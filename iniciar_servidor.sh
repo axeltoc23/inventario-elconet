@@ -31,7 +31,7 @@ send_telegram_msg() {
 # PASO 1: Activar entorno y ejecutar Gunicorn
 cd "$PROYECTO_DIR"
 source "$ENTORNO_VIRTUAL"
-$GUNICORN_BIN --workers 3 --bind 0.0.0.0:8000 inventario.wsgi:application &
+$GUNICORN_BIN --workers 4 --bind 127.0.0.1:8000 inventario.wsgi:application &
 sleep 3
 
 # PASO 2: Ejecutar ngrok
