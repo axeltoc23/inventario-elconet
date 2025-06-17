@@ -5,8 +5,9 @@ import socket
 import time
 import getpass
 
-TOKEN = "7612438597:AAFWnvkBsJzO-2_wNnhvmSE7zaM8WwO6UbI"
-CHAT_ID = "5481766894"
+# CREDENCIALES DE TELEGRAM (MODIFICAR CON TUS DATOS REALES)
+TOKEN = "TU_TOKEN_AQUI"
+CHAT_ID = "TU_CHAT_ID_AQUI"
 
 def verificar_conexion_internet(reintentos=5, espera=5):
     for intento in range(reintentos):

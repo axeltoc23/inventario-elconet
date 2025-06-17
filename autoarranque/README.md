@@ -8,11 +8,11 @@ Este directorio contiene los scripts y servicios necesarios para que el servidor
 
 ### Scripts a copiar en `/opt/autoarranque/`
 - `notificar_ip.py`: Script que envía la IP de Django por Telegram al iniciar.
-- `iniciar_servidor.py`: Script que arranca Django, ngrok, Celery, etc.
+- `lanzar_backend.py`: Script que arranca Django, ngrok, Celery, etc.
 
 ### Servicios a copiar en `/etc/systemd/system/`
 - `notificar_ip.service`: Servicio systemd que lanza `notificar_ip.py` al arrancar.
-- `mi_servidor.service`: Servicio systemd que lanza `iniciar_servidor.py`.
+- `lanzar_backend.service`: Servicio systemd que lanza `lanzar_backend.py`.
 
 ---
 
@@ -26,20 +26,20 @@ Este directorio contiene los scripts y servicios necesarios para que el servidor
 2. Copia los scripts a `/opt/autoarranque/`:
 
    ```bash
-   sudo cp notificar_ip.py iniciar_servidor.py /opt/autoarranque/
+   sudo cp notificar_ip.py lanzar_backend.py /opt/autoarranque/
    ```
 
 3. Copia los servicios a `/etc/systemd/system/`:
 
    ```bash
-   sudo cp notificar_ip.service mi_servidor.service /etc/systemd/system/
+   sudo cp notificar_ip.service lanzar_backend.service /etc/systemd/system/
    ```
 
 4. Da permisos de ejecución a los scripts:
 
    ```bash
    sudo chmod +x /opt/autoarranque/notificar_ip.py
-   sudo chmod +x /opt/mi_proyecto/iniciar_servidor.py
+   sudo chmod +x /opt/autoarranque/lanzar_backend.py
    ```
 
 5. Recarga y habilita los servicios:
@@ -48,16 +48,16 @@ Este directorio contiene los scripts y servicios necesarios para que el servidor
    sudo systemctl daemon-reexec
    sudo systemctl daemon-reload
    sudo systemctl enable notificar_ip.service
-   sudo systemctl enable mi_servidor.service
+   sudo systemctl enable lanzar_backend.service
    sudo systemctl start notificar_ip.service
-   sudo systemctl start mi_servidor.service
+   sudo systemctl start lanzar_backend.service
    ```
 
 6. Verifica que estén activos:
 
    ```bash
    systemctl status notificar_ip.service
-   systemctl status mi_servidor.service
+   systemctl status lanzar_backend.service
    ```
 
 ---

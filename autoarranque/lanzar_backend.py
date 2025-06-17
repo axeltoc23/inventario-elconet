@@ -7,7 +7,9 @@ import sys
 import socket
 import os
 
-SCRIPT_BASH = "/home/elconet/django-server/iniciar_servidor.sh"
+# Ruta absoluta al script bash que se ejecutará para iniciar el servidor
+# Reemplazar con la ubicación real del archivo iniciar_servidor.sh
+SCRIPT_BASH = "/ruta/a/iniciar_servidor.sh"
 TELEGRAM_FLAG_FILE = "/tmp/telegram_notify_sent.flag"
 
 logging.basicConfig(
@@ -46,9 +48,6 @@ def enviar_mensaje_telegram_si_es_necesario():
             ip_local = socket.gethostbyname(socket.gethostname())
             mensaje = f"🚀 Servidor Django con Gunicorn iniciado\n🔗 IP local: http://{ip_local}"
             logging.info(mensaje)
-
-            # Aquí deberías llamar a tu función para enviar a Telegram
-            # enviar_telegram(mensaje)
 
             open(TELEGRAM_FLAG_FILE, "w").close()
         except Exception as e:
