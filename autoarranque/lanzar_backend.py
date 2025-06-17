@@ -7,7 +7,7 @@ import sys
 import socket
 import os
 
-SCRIPT_BASH = "/home/axel/Documents/inventario-elconet/iniciar_servidor.sh"
+SCRIPT_BASH = "/home/elconet/django-server/iniciar_servidor.sh"
 TELEGRAM_FLAG_FILE = "/tmp/telegram_notify_sent.flag"
 
 logging.basicConfig(

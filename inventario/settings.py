@@ -23,11 +23,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-9_(xj75j=+_m17++ogqpvw9@cm!3gdpcmvytki-*yofn7@$e_z'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 # Host permitidos para acceder desde otra computadora en la misma red
 # Si se necesita permitir a todos (solo produccion) ALLOWED_HOSTS = ['*']
-ALLOWED_HOSTS = ['192.168.1.28', 'localhost', '*']
+ALLOWED_HOSTS = ['localhost', '*']
 
 
 # Application definition
@@ -84,8 +84,8 @@ WSGI_APPLICATION = 'inventario.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'db_inventario_elconet',
-        'USER': 'user_inventario_elconet',
+        'NAME': 'elconetdb',
+        'USER': 'elconetuser',
         'PASSWORD': 'axel',
         'HOST': 'localhost',
         'PORT': '5432',
@@ -147,8 +147,8 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Informacion para la utilizacion de TELEGRAM
-TELEGRAM_BOT_TOKEN = "7512055988:AAF3pQ7kAlxf63O_9PsUQITqfmwzqYgEgiw"
-TELEGRAM_CHAT_ID = -4985420036
+TELEGRAM_BOT_TOKEN = "7612438597:AAFWnvkBsJzO-2_wNnhvmSE7zaM8WwO6UbI"
+TELEGRAM_CHAT_ID = -4886039686
 
 # URLs que manejaran el movimiento de nuestra pagina
 # Gestionar las URL de autenticación

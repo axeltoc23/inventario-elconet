@@ -1,14 +1,14 @@
 #!/bin/bash
 
 # === RUTAS ===
-PROYECTO_DIR="/home/$USER/Documents/inventario-elconet"
+PROYECTO_DIR="/home/$USER/django-server"
 ENTORNO_VIRTUAL="$PROYECTO_DIR/env/bin/activate"
 NGROK_BIN="/usr/local/bin/ngrok"
 GUNICORN_BIN="$PROYECTO_DIR/env/bin/gunicorn"
 
 # === VARIABLES DEL BOT ===
-BOT_TOKEN="7512055988:AAF3pQ7kAlxf63O_9PsUQITqfmwzqYgEgiw"
-CHAT_ID=-4985420036
+BOT_TOKEN="7612438597:AAFWnvkBsJzO-2_wNnhvmSE7zaM8WwO6UbI"
+CHAT_ID=-4886039686
 WEBHOOK_ENDPOINT="/productos/webhook/"
 
 # === FUNCIÓN PARA OBTENER IP LOCAL ===

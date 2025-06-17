@@ -5,7 +5,7 @@ Wants=network-online.target
 
 [Service]
 Type=simple
-User=axel
+User=elconet
 WorkingDirectory=/opt/autoarranque
 ExecStart=/usr/bin/python3 /opt/autoarranque/lanzar_backend.py
 Restart=always
