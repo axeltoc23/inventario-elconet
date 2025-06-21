@@ -25,7 +25,7 @@ sudo nginx -t
 sudo systemctl restart nginx
 ```
 
-> Asegurate de que el nombre del archivo coincida con el del archivo copiado (sin `.conf` si no se usa en `sites-enabled`).
+> Asegúrate de que el nombre del archivo en sites-enabled/ coincida exactamente con el de sites-available/, incluyendo o no la extensión .conf, según cómo lo hayas nombrado originalmente.
 
 ---
 

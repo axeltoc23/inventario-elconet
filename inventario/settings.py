@@ -19,14 +19,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-9_(xj75j=+_m17++ogqpvw9@cm!3gdpcmvytki-*yofn7@$e_z'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
 # Host permitidos para acceder desde otra computadora en la misma red
-# Si se necesita permitir a todos (solo produccion) ALLOWED_HOSTS = ['*']
+# Si se necesita permitir a todos ALLOWED_HOSTS = ['*']
 ALLOWED_HOSTS = ['localhost', '*']
 
 
@@ -83,12 +82,12 @@ WSGI_APPLICATION = 'inventario.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'elconetdb',
-        'USER': 'elconetuser',
-        'PASSWORD': 'axel',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.postgresql',  # No cambiar si estás usando PostgreSQL
+        'NAME': 'nombre_de_la_base_de_datos',       # Reemplaza con el nombre de tu base de datos
+        'USER': 'usuario_de_postgres',              # Reemplaza con el nombre de usuario de PostgreSQL
+        'PASSWORD': 'contraseña_del_usuario',       # Reemplaza con la contraseña del usuario
+        'HOST': 'localhost',                        # Usualmente es 'localhost', a menos que uses un servidor externo
+        'PORT': '5432',                             # Puerto por defecto de PostgreSQL; cámbialo si usas otro
     }
 }
 
@@ -146,9 +145,17 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Informacion para la utilizacion de TELEGRAM
-TELEGRAM_BOT_TOKEN = "7612438597:AAFWnvkBsJzO-2_wNnhvmSE7zaM8WwO6UbI"
-TELEGRAM_CHAT_ID = -4886039686
+# Información para la utilización de TELEGRAM
+
+TELEGRAM_BOT_TOKEN = "tu_token_de_bot"
+# Reemplaza con el token generado por BotFather al crear tu bot de Telegram.
+# El formato es similar a: 123456789:ABCdefGHIjkLmnOPQRstuVWxyZ
+
+TELEGRAM_CHAT_ID = -123456789
+# Reemplaza con el ID del chat o grupo al que deseas enviar los mensajes.
+# Si es un grupo, asegúrate de que el bot esté dentro del grupo.
+# Los IDs de grupo normalmente empiezan con un signo negativo (-).
+
 
 # URLs que manejaran el movimiento de nuestra pagina
 # Gestionar las URL de autenticación
